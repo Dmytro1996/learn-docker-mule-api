@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<!--<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">-->
+    <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">    
     <apikit:config name="learn-docker-api-config" api="learn-docker-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="learn-docker-api-main">
         <http:listener path="/api/*" config-ref="HTTP_Listener_config">
@@ -14,82 +15,88 @@
         <apikit:router config-ref="learn-docker-api-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Bad request"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Bad request"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">400</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Bad request"}]' doc:name="Set Payload" doc:id="186f5a32-6088-409a-bce0-312b85707eed" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Resource not found"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">404</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Resource not found"}]' doc:name="Set Payload" doc:id="033174a4-ee50-4352-bcb2-ddb7afc546eb" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Method not allowed"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Method not allowed"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">405</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Method not allowed"}]' doc:name="Set Payload" doc:id="feed94e2-9262-42f8-9f9c-2a53728b0833" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Not acceptable"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Not acceptable"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">406</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Not acceptable"}]' doc:name="Set Payload" doc:id="fdc28477-05a1-4c7b-9844-29d647684509" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Unsupported media type"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Unsupported media type"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">415</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Unsupported media type"}]' doc:name="Set Payload" doc:id="6f35600e-7a19-4862-9c10-a4285bd91456" />
             </on-error-propagate>
             <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Not Implemented"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Not Implemented"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">501</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Not Implemented"}]' doc:name="Set Payload" doc:id="acfddfe2-3f28-4437-ac09-4bbc929a000c" />
             </on-error-propagate>
         </error-handler>
     </flow>
@@ -106,28 +113,30 @@ output application/json
         <apikit:console config-ref="learn-docker-api-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:NOT_FOUND">
-                <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]                <ee:transform doc:name="Transform Message">
                     <ee:message>
                         <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-{message: "Resource not found"}]]></ee:set-payload>
+&#45;&#45;-
+{message: "Resource not found"}&#93;&#93;></ee:set-payload>
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus">404</ee:set-variable>
                     </ee:variables>
-                </ee:transform>
+                </ee:transform> [STUDIO] -->
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{message: "Resource not found"}]' doc:name="Set Payload" doc:id="de683df8-0937-4685-af89-6f60b79a3fb8" />
             </on-error-propagate>
         </error-handler>
     </flow>
     <flow name="get:\hello-world:learn-docker-api-config">
-        <ee:transform doc:name="Transform Message">
+<!-- [STUDIO:"Transform Message"]        <ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
-"Hello world!"]]></ee:set-payload>
+&#45;&#45;-
+"Hello world!"&#93;&#93;></ee:set-payload>
             </ee:message>
-        </ee:transform>
+        </ee:transform> [STUDIO] -->
+		<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;"Hello world!"]' doc:name="Set Payload" doc:id="1d9ba0c6-b672-476b-9eaf-b024f928708a" />
     </flow>
 </mule>
