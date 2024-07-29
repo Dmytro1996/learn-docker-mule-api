@@ -1,7 +1,5 @@
 FROM adoptopenjdk/openjdk8
 
-LABEL maintainer="bibekgorain"
-
 ENV MULE_HOME=/opt/mule
 
 ENV MULE_VERSION=4.4.0
@@ -9,21 +7,20 @@ ENV MULE_VERSION=4.4.0
 COPY src /usr/local/lib/learn-docker-api/src
 COPY pom.xml /usr/local/lib/learn-docker-api
 COPY mule-artifact.json /usr/local/lib/learn-docker-api/
-COPY mule-artifact.json /usr/local/lib/learn-docker-api/META-INF/mule-artifact/
 
 RUN apt update
 RUN apt-get install unzip
-#RUN apt-get install zip
+RUN apt-get install -y maven
+RUN mvn -f /usr/local/lib/learn-docker-api/pom.xml clean package
 
 RUN set -x \
 && cd /opt \
 && curl -o mule.zip https://repository-master.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/${MULE_VERSION}/mule-standalone-${MULE_VERSION}.zip \
 && unzip mule.zip \
 && mv mule-standalone-$MULE_VERSION mule \
-&& rm mule.zip* #\
-#&& zip -r /opt/mule/apps/learn-docker-api.zip /usr/local/lib/learn-docker-api
+&& rm mule.zip* 
 
-COPY /usr/local/lib/learn-docker-api /opt/mule/apps/learn-docker-api
+RUN cp -R /usr/local/lib/learn-docker-api/target/learn-docker-api-1.0.0-SNAPSHOT-mule-application.jar /opt/mule/apps/learn-docker-api.jar
 
 WORKDIR $MULE_HOME
 
